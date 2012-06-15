@@ -38,12 +38,10 @@ Ext.define('CustomApp', {
     createChart:function() {
         //[Date.UTC(1970, 9, 27), 0   ],
         var data = [];
-        debugger;
-        var sorted = Ext.Object.getKeys(this._bucketByDay).sort();
+        var sorted = Ext.Object.getKeys(this._bucketByMonth).sort();
         Ext.each(sorted, function(key) {
             var date = Ext.Date.parse(key, "c");
-//            debugger;
-            data.push(date, this._bucketByDay[key])
+            data.push(date, this._bucketByMonth[key])
         }, this);
 
         new Highcharts.Chart({
@@ -60,13 +58,13 @@ Ext.define('CustomApp', {
             xAxis: {
                 type: 'datetime',
                 dateTimeLabelFormats: {
-                    month: '%e. %b',
+                    month: '%B',
                     year: '%b'
                 }
             },
             yAxis: {
                 title: {
-                    text: 'Snow depth (m)'
+                    text: 'Question Count'
                 },
                 min: 0
             },
@@ -79,7 +77,7 @@ Ext.define('CustomApp', {
 
             series: [
                 {
-                    name: 'Awesome Question Dataz',
+                    name: 'Month',
                     data: data
                 }
             ]
