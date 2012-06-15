@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>StackOverflow Question Reporting</title>
+
+    <script type="text/javascript" src="/apps/2.0p/sdk.js?wsapiVersion=1.33"></script>
+
+    <script type="text/javascript">
+        Rally.onReady(function() {
+            Ext.define('StackOverflowDataGrabber', {
+            
+            });            Ext.define('CustomApp', {
+                extend: 'Rally.app.App',
+                componentCls: 'app',
+            
+                launch: function() {
+                    //Write app code here
+                }
+            });
+
+            Rally.launchApp('CustomApp', {
+                name: 'StackOverflow Question Reporting'
+            });
+        });
+    </script>
+
+    <style type="text/css">
+        .app {
+             /* Add app styles here */
+        }
+    </style>
+</head>
+<body></body>
+</html>
