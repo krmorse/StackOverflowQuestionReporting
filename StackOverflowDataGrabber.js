@@ -1,19 +1,21 @@
-Ext.define('StackOverflowDataGrabber', {
+var App = App||{}; //sigh jslint
+Ext.define('App.StackOverflowDataGrabber', {
     getData:function(callback) {
         var data = [];
         var pageNumber = 1;
-        this._getOnePage(pageNumber, aggregator);
         function aggregator(success,response) {
-            debugger;
             pageNumber++;
             data = data.concat(response.items);
             if (response.has_more) {
-                StackOverflowDataGrabber._getOnePage(pageNumber, aggregator);
+                App.StackOverflowDataGrabber._getOnePage(pageNumber, aggregator);
             }
             else {
                 callback(data);
             }
         }
+
+        this._getOnePage(pageNumber, aggregator);
+
     },
 
     _getOnePage:function(pageNumber, callback) {

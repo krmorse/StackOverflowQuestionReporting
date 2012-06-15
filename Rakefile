@@ -382,6 +382,9 @@ JAVASCRIPT_BLOCK
     <title>APP_TITLE</title>
 
     <script type="text/javascript" src="APP_SDK_PATH"></script>
+    <script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'></script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharts.com/modules/exporting.js"></script>
 
     <script type="text/javascript">
         Rally.onReady(function() {
@@ -408,7 +411,9 @@ STYLE_BLOCK
     <title>APP_TITLE</title>
 
     <script type="text/javascript" src="APP_SDK_PATH"></script>
-
+    <script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'></script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharts.com/modules/exporting.js"></script>
     <script type="text/javascript">
         Rally.onReady(function() {
 #{JAVASCRIPT_INLINE_BLOCK_TPL}        });

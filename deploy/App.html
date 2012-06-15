@@ -4,17 +4,56 @@
     <title>StackOverflow Question Reporting</title>
 
     <script type="text/javascript" src="/apps/2.0p/sdk.js?wsapiVersion=1.33"></script>
-
+    <script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'></script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharts.com/modules/exporting.js"></script>
     <script type="text/javascript">
         Rally.onReady(function() {
-            Ext.define('StackOverflowDataGrabber', {
+            var App = App||{}; //sigh jslint
+            Ext.define('App.StackOverflowDataGrabber', {
+                getData:function(callback) {
+                    var data = [];
+                    var pageNumber = 1;
+                    function aggregator(success,response) {
+                        pageNumber++;
+                        data = data.concat(response.items);
+                        if (response.has_more) {
+                            App.StackOverflowDataGrabber._getOnePage(pageNumber, aggregator);
+                        }
+                        else {
+                            callback(data);
+                        }
+                    }
             
-            });            Ext.define('CustomApp', {
+                    this._getOnePage(pageNumber, aggregator);
+            
+                },
+            
+                _getOnePage:function(pageNumber, callback) {
+                    Ext.data.JsonP.request({
+                        url: 'https://api.stackexchange.com/2.0/questions',
+                        params:{
+                            key:"U4DMV*8nvpm3EOpvf69Rxw((",
+                            tagged:"rally",
+                            site:"stackoverflow",
+                            pagesize:100,
+                            page:pageNumber
+                        },
+                        callback:callback
+                    });
+                },
+            
+                singleton:true
+            });            var App = App||{}; //sigh jslint
+            
+            Ext.define('CustomApp', {
                 extend: 'Rally.app.App',
                 componentCls: 'app',
             
                 launch: function() {
-                    //Write app code here
+                    App.StackOverflowDataGrabber.getData(function(results){
+                        //console.log(results);
+                    });
                 }
             });
 
