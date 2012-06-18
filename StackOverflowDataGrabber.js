@@ -1,4 +1,3 @@
-var App = App||{}; //sigh jslint
 Ext.define('App.StackOverflowDataGrabber', {
     getData:function(callback) {
         var data = [];

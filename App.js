@@ -1,5 +1,3 @@
-var App = App || {}; //sigh jslint
-
 Ext.define('CustomApp', {
     extend: 'Rally.app.App',
     componentCls: 'app',
@@ -42,7 +40,6 @@ Ext.define('CustomApp', {
             data.push(this._bucketByMonth[key]);
         }, this);
         //jslint..... :(
-        var Highcharts = Highcharts;
         new Highcharts.Chart({
                 chart: {
                     renderTo: this.getEl().id,
@@ -94,5 +91,4 @@ Ext.define('CustomApp', {
             me._displayData();
         });
     }
-})
-    ;
+});
