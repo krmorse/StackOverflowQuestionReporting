@@ -46,7 +46,7 @@ Ext.define('CustomApp', {
                     type: 'spline'
                 },
                 title: {
-                    text: 'StackOverflow Questions Overtime'
+                    text: 'StackOverflow Questions Over Time'
                 },
                 subtitle: {
                     text: ''
