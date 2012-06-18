@@ -39,9 +39,10 @@ Ext.define('CustomApp', {
         var data = [];
         var sorted = Ext.Object.getKeys(this._bucketByMonth).sort();
         Ext.each(sorted, function(key) {
-            data.push(this._bucketByMonth[key])
+            data.push(this._bucketByMonth[key]);
         }, this);
-
+        //jslint..... :(
+        var Highcharts = Highcharts;
         new Highcharts.Chart({
                 chart: {
                     renderTo: this.getEl().id,
