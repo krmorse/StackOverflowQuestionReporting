@@ -12,7 +12,6 @@ Ext.define('CustomApp', {
     },
 
     _displayData:function() {
-        console.log(this.results);
         Ext.each(this.results, function(question) {
             var date = Ext.Date.format((Ext.Date.parse(question.creation_date, "U")), "c").split('T')[0];
             if (this._bucketByDay[date]) {
@@ -59,7 +58,7 @@ Ext.define('CustomApp', {
                 labels:{
                     formatter:function() {
                         var date = Ext.Date.parse(sorted[this.value], "c");
-                        return Ext.Date.format(date,"F");
+                        return Ext.Date.format(date, "F");
                     }
                 }
             },
@@ -71,14 +70,16 @@ Ext.define('CustomApp', {
             },
             tooltip: {
                 formatter: function() {
-                    return '<b>' + this.series.name + '</b><br/>' +
-                        Highcharts.dateFormat('%e. %b', this.x) + ': ' + this.y + ' m';
+
+                    var date = Ext.Date.parse(sorted[this.x], "c");
+                    var x = Ext.Date.format(date, "F");
+                    return '<b>' + this.y + ' questions asked during </b><br/>' + x;
                 }
             },
 
             series: [
                 {
-                    name: 'Month',
+                    name: 'Months',
                     data: data
                 }
             ]
