@@ -43,47 +43,47 @@ Ext.define('CustomApp', {
         }, this);
 
         new Highcharts.Chart({
-            chart: {
-                renderTo: this.getEl().id,
-                type: 'spline'
-            },
-            title: {
-                text: 'StackOverflow Questions Overtime'
-            },
-            subtitle: {
-                text: ''
-            },
-            xAxis: {
-                type: 'datetime',
-                labels:{
-                    formatter:function() {
-                        var date = Ext.Date.parse(sorted[this.value], "c");
-                        return Ext.Date.format(date, "F");
-                    }
-                }
-            },
-            yAxis: {
-                title: {
-                    text: 'Question Count'
+                chart: {
+                    renderTo: this.getEl().id,
+                    type: 'spline'
                 },
-                min: 0
-            },
-            tooltip: {
-                formatter: function() {
+                title: {
+                    text: 'StackOverflow Questions Overtime'
+                },
+                subtitle: {
+                    text: ''
+                },
+                xAxis: {
+                    type: 'datetime',
+                    labels:{
+                        formatter:function() {
+                            var date = Ext.Date.parse(sorted[this.value], "c");
+                            return Ext.Date.format(date, "F");
+                        }
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: 'Question Count'
+                    },
+                    min: 0
+                },
+                tooltip: {
+                    formatter: function() {
 
-                    var date = Ext.Date.parse(sorted[this.x], "c");
-                    var x = Ext.Date.format(date, "F");
-                    return '<b>' + this.y + ' questions asked during </b><br/>' + x;
-                }
-            },
+                        var date = Ext.Date.parse(sorted[this.x], "c");
+                        var x = Ext.Date.format(date, "F");
+                        return '<b>' + this.y + ' questions asked during </b><br/>' + x;
+                    }
+                },
 
-            series: [
-                {
-                    name: 'Months',
-                    data: data
-                }
-            ]
-        });
+                series: [
+                    {
+                        name: 'Months',
+                        data: data
+                    }
+                ]
+            });
     },
 
     launch: function() {
