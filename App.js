@@ -40,8 +40,7 @@ Ext.define('CustomApp', {
         var data = [];
         var sorted = Ext.Object.getKeys(this._bucketByMonth).sort();
         Ext.each(sorted, function(key) {
-            var date = Ext.Date.parse(key, "c");
-            data.push(date, this._bucketByMonth[key])
+            data.push(this._bucketByMonth[key])
         }, this);
 
         new Highcharts.Chart({
@@ -50,16 +49,18 @@ Ext.define('CustomApp', {
                 type: 'spline'
             },
             title: {
-                text: 'I gotz some dataz now'
+                text: 'StackOverflow Questions Overtime'
             },
             subtitle: {
                 text: ''
             },
             xAxis: {
                 type: 'datetime',
-                dateTimeLabelFormats: {
-                    month: '%B',
-                    year: '%b'
+                labels:{
+                    formatter:function() {
+                        var date = Ext.Date.parse(sorted[this.value], "c");
+                        return Ext.Date.format(date,"F");
+                    }
                 }
             },
             yAxis: {

@@ -26,7 +26,8 @@ Ext.define('App.StackOverflowDataGrabber', {
                 tagged:"rally",
                 site:"stackoverflow",
                 pagesize:100,
-                page:pageNumber
+                page:pageNumber,
+                fromDate:Ext.Date.format(new Date('2011-07-01'),'U')
             },
             callback:callback
         });
