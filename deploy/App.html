@@ -3,28 +3,26 @@
 <head>
     <title>StackOverflow Question Reporting</title>
 
-    <script type="text/javascript" src="/apps/2.0p/sdk.js?wsapiVersion=1.33"></script>
-    <script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'></script>
-    <script src="http://code.highcharts.com/highcharts.js"></script>
-    <script src="http://code.highcharts.com/modules/exporting.js"></script>
+    <script type="text/javascript" src="/apps/2.0p5/sdk.js"></script>
+
     <script type="text/javascript">
         Rally.onReady(function() {
             Ext.define('App.StackOverflowDataGrabber', {
                 getData:function(callback) {
                     var data = [];
                     var pageNumber = 1;
-                    function aggregator(success,response) {
+                    function gatherer(success,response) {
                         pageNumber++;
                         data = data.concat(response.items);
                         if (response.has_more) {
-                            App.StackOverflowDataGrabber._getOnePage(pageNumber, aggregator);
+                            App.StackOverflowDataGrabber._getOnePage(pageNumber, gatherer);
                         }
                         else {
                             callback(data);
                         }
                     }
             
-                    this._getOnePage(pageNumber, aggregator);
+                    this._getOnePage(pageNumber, gatherer);
             
                 },
             
@@ -45,8 +43,8 @@
             
                 singleton:true
             });            Ext.define('CustomApp', {
-                extend: 'Rally.app.App',
-                componentCls: 'app',
+                extend:'Rally.app.App',
+                componentCls:'app',
             
                 _bucketByDay:{
             
@@ -55,8 +53,8 @@
             
                 },
             
-                _displayData:function() {
-                    Ext.each(this.results, function(question) {
+                _displayData:function () {
+                    Ext.each(this.results, function (question) {
                         var date = Ext.Date.format((Ext.Date.parse(question.creation_date, "U")), "c").split('T')[0];
                         if (this._bucketByDay[date]) {
                             this._bucketByDay[date]++;
@@ -78,61 +76,71 @@
                     this.createChart();
                 },
             
-                createChart:function() {
+                createChart:function () {
                     //[Date.UTC(1970, 9, 27), 0   ],
                     var data = [];
                     var sorted = Ext.Object.getKeys(this._bucketByMonth).sort();
-                    Ext.each(sorted, function(key) {
+                    Ext.each(sorted, function (key) {
                         data.push(this._bucketByMonth[key]);
                     }, this);
-                    //jslint..... :(
-                    new Highcharts.Chart({
-                            chart: {
-                                renderTo: this.getEl().id,
-                                type: 'spline'
-                            },
-                            title: {
-                                text: 'StackOverflow Questions Over Time'
-                            },
-                            subtitle: {
-                                text: ''
-                            },
-                            xAxis: {
-                                type: 'datetime',
-                                labels:{
-                                    formatter:function() {
-                                        var date = Ext.Date.parse(sorted[this.value], "c");
-                                        return Ext.Date.format(date, "F");
-                                    }
-                                }
-                            },
-                            yAxis: {
-                                title: {
-                                    text: 'Question Count'
-                                },
-                                min: 0
-                            },
-                            tooltip: {
-                                formatter: function() {
             
-                                    var date = Ext.Date.parse(sorted[this.x], "c");
-                                    var x = Ext.Date.format(date, "F");
-                                    return '<b>' + this.y + ' questions asked during </b><br/>' + x;
-                                }
-                            },
+                    Ext.create('Ext.Container', {
+                        items:[
+                            {
+                                xtype:'rallychart',
+                                height:400,
+                                chartConfig:{
+                                    chart:{
+                                        renderTo:this.getEl().id,
+                                        type:'spline'
+                                    },
+                                    title:{
+                                        text:'StackOverflow Questions Over Time'
+                                    },
+                                    subtitle:{
+                                        text:''
+                                    },
+                                    xAxis:{
+                                        type:'datetime',
+                                        labels:{
+                                            formatter:function () {
+                                                var date = Ext.Date.parse(sorted[this.value], "c");
+                                                return Ext.Date.format(date, "F");
+                                            }
+                                        }
+                                    },
+                                    yAxis:{
+                                        title:{
+                                            text:'Question Count'
+                                        },
+                                        min:0
+                                    },
+                                    tooltip:{
+                                        formatter:function () {
             
-                            series: [
-                                {
-                                    name: 'Months',
-                                    data: data
+                                            var date = Ext.Date.parse(sorted[this.x], "c");
+                                            var x = Ext.Date.format(date, "F");
+                                            return '<b>' + this.y + ' questions asked during </b><br/>' + x;
+                                        }
+                                    },
+            
+                                    series:[
+                                        {
+                                            name:'Months',
+                                            data:data
+                                        }
+                                    ]
                                 }
-                            ]
-                        });
+                            }
+                        ],
+                        renderTo:Ext.getBody().dom
+                    });
+            
                 },
             
-                launch: function() {
+                launch:function () {
                     var me = this;
-                    App.StackOverflowDataGrabber.getData(function(results) {
+                    App.StackOverflowDataGrabber.getData(function (results) {
                         me.results = results;
                         me._displayData();
                     });

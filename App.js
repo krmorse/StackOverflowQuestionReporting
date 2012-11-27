@@ -1,6 +1,6 @@
 Ext.define('CustomApp', {
-    extend: 'Rally.app.App',
-    componentCls: 'app',
+    extend:'Rally.app.App',
+    componentCls:'app',
 
     _bucketByDay:{
 
@@ -9,8 +9,8 @@ Ext.define('CustomApp', {
 
     },
 
-    _displayData:function() {
-        Ext.each(this.results, function(question) {
+    _displayData:function () {
+        Ext.each(this.results, function (question) {
             var date = Ext.Date.format((Ext.Date.parse(question.creation_date, "U")), "c").split('T')[0];
             if (this._bucketByDay[date]) {
                 this._bucketByDay[date]++;
@@ -32,61 +32,71 @@ Ext.define('CustomApp', {
         this.createChart();
     },
 
-    createChart:function() {
+    createChart:function () {
         //[Date.UTC(1970, 9, 27), 0   ],
         var data = [];
         var sorted = Ext.Object.getKeys(this._bucketByMonth).sort();
-        Ext.each(sorted, function(key) {
+        Ext.each(sorted, function (key) {
             data.push(this._bucketByMonth[key]);
         }, this);
-        //jslint..... :(
-        new Highcharts.Chart({
-                chart: {
-                    renderTo: this.getEl().id,
-                    type: 'spline'
-                },
-                title: {
-                    text: 'StackOverflow Questions Over Time'
-                },
-                subtitle: {
-                    text: ''
-                },
-                xAxis: {
-                    type: 'datetime',
-                    labels:{
-                        formatter:function() {
-                            var date = Ext.Date.parse(sorted[this.value], "c");
-                            return Ext.Date.format(date, "F");
-                        }
-                    }
-                },
-                yAxis: {
-                    title: {
-                        text: 'Question Count'
-                    },
-                    min: 0
-                },
-                tooltip: {
-                    formatter: function() {
 
-                        var date = Ext.Date.parse(sorted[this.x], "c");
-                        var x = Ext.Date.format(date, "F");
-                        return '<b>' + this.y + ' questions asked during </b><br/>' + x;
-                    }
-                },
+        Ext.create('Ext.Container', {
+            items:[
+                {
+                    xtype:'rallychart',
+                    height:400,
+                    chartConfig:{
+                        chart:{
+                            renderTo:this.getEl().id,
+                            type:'spline'
+                        },
+                        title:{
+                            text:'StackOverflow Questions Over Time'
+                        },
+                        subtitle:{
+                            text:''
+                        },
+                        xAxis:{
+                            type:'datetime',
+                            labels:{
+                                formatter:function () {
+                                    var date = Ext.Date.parse(sorted[this.value], "c");
+                                    return Ext.Date.format(date, "F");
+                                }
+                            }
+                        },
+                        yAxis:{
+                            title:{
+                                text:'Question Count'
+                            },
+                            min:0
+                        },
+                        tooltip:{
+                            formatter:function () {
 
-                series: [
-                    {
-                        name: 'Months',
-                        data: data
+                                var date = Ext.Date.parse(sorted[this.x], "c");
+                                var x = Ext.Date.format(date, "F");
+                                return '<b>' + this.y + ' questions asked during </b><br/>' + x;
+                            }
+                        },
+
+                        series:[
+                            {
+                                name:'Months',
+                                data:data
+                            }
+                        ]
                     }
-                ]
-            });
+                }
+            ],
+            renderTo:Ext.getBody().dom
+        });
+
     },
 
-    launch: function() {
+    launch:function () {
         var me = this;
-        App.StackOverflowDataGrabber.getData(function(results) {
+        App.StackOverflowDataGrabber.getData(function (results) {
             me.results = results;
             me._displayData();
         });

@@ -1,7 +1,7 @@
 {
     "name": "StackOverflow Question Reporting",
     "className": "CustomApp",
-    "sdk": "2.0p",
+    "sdk": "2.0p5",
     "javascript": [
         "StackOverflowDataGrabber.js",
         "App.js"

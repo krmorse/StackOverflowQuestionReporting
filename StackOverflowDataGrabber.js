@@ -2,18 +2,18 @@ Ext.define('App.StackOverflowDataGrabber', {
     getData:function(callback) {
         var data = [];
         var pageNumber = 1;
-        function aggregator(success,response) {
+        function gatherer(success,response) {
             pageNumber++;
             data = data.concat(response.items);
             if (response.has_more) {
-                App.StackOverflowDataGrabber._getOnePage(pageNumber, aggregator);
+                App.StackOverflowDataGrabber._getOnePage(pageNumber, gatherer);
             }
             else {
                 callback(data);
             }
         }
 
-        this._getOnePage(pageNumber, aggregator);
+        this._getOnePage(pageNumber, gatherer);
 
     },
 
