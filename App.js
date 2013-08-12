@@ -36,6 +36,7 @@ Ext.define('CustomApp', {
         //[Date.UTC(1970, 9, 27), 0   ],
         var data = [];
         var sorted = Ext.Object.getKeys(this._bucketByMonth).sort();
+        sorted.pop();
         Ext.each(sorted, function (key) {
             data.push(this._bucketByMonth[key]);
         }, this);

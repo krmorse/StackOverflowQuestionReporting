@@ -1,12 +1,13 @@
 {
-    "name": "StackOverflow Question Reporting",
-    "className": "CustomApp",
-    "sdk": "2.0p5",
-    "javascript": [
-        "StackOverflowDataGrabber.js",
-        "App.js"
-    ],
-    "css": [
-        "app.css"
-    ]
+   "name": "StackOverflow Question Reporting",
+   "className": "CustomApp",
+   "sdk": "2.0p5",
+   "javascript": [
+      "StackOverflowDataGrabber.js",
+      "App.js"
+   ],
+   "css": [
+      "app.css"
+   ],
+   "server": "https://rally1.rallydev.com"
 }

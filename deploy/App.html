@@ -6,157 +6,24 @@
     <script type="text/javascript" src="/apps/2.0p5/sdk.js"></script>
 
     <script type="text/javascript">
-        Rally.onReady(function() {
-            Ext.define('App.StackOverflowDataGrabber', {
-                getData:function(callback) {
-                    var data = [];
-                    var pageNumber = 1;
-                    function gatherer(success,response) {
-                        pageNumber++;
-                        data = data.concat(response.items);
-                        if (response.has_more) {
-                            App.StackOverflowDataGrabber._getOnePage(pageNumber, gatherer);
-                        }
-                        else {
-                            callback(data);
-                        }
-                    }
-            
-                    this._getOnePage(pageNumber, gatherer);
-            
-                },
-            
-                _getOnePage:function(pageNumber, callback) {
-                    Ext.data.JsonP.request({
-                        url: 'https://api.stackexchange.com/2.0/questions',
-                        params:{
-                            key:"U4DMV*8nvpm3EOpvf69Rxw((",
-                            tagged:"rally",
-                            site:"stackoverflow",
-                            pagesize:100,
-                            page:pageNumber,
-                            fromDate:Ext.Date.format(new Date('2011-07-01'),'U')
-                        },
-                        callback:callback
-                    });
-                },
-            
-                singleton:true
-            });            Ext.define('CustomApp', {
-                extend:'Rally.app.App',
-                componentCls:'app',
-            
-                _bucketByDay:{
-            
-                },
-                _bucketByMonth:{
-            
-                },
-            
-                _displayData:function () {
-                    Ext.each(this.results, function (question) {
-                        var date = Ext.Date.format((Ext.Date.parse(question.creation_date, "U")), "c").split('T')[0];
-                        if (this._bucketByDay[date]) {
-                            this._bucketByDay[date]++;
-                        }
-                        else {
-                            this._bucketByDay[date] = 1;
-                        }
-            
-                        var monthString = date.substring(0, 7);
-                        if (this._bucketByMonth[monthString]) {
-                            this._bucketByMonth[monthString]++;
-                        }
-                        else {
-                            this._bucketByMonth[monthString] = 1;
-                        }
-            
-            
-                    }, this);
-                    this.createChart();
-                },
-            
-                createChart:function () {
-                    //[Date.UTC(1970, 9, 27), 0   ],
-                    var data = [];
-                    var sorted = Ext.Object.getKeys(this._bucketByMonth).sort();
-                    Ext.each(sorted, function (key) {
-                        data.push(this._bucketByMonth[key]);
-                    }, this);
-            
-                    Ext.create('Ext.Container', {
-                        items:[
-                            {
-                                xtype:'rallychart',
-                                height:400,
-                                chartConfig:{
-                                    chart:{
-                                        renderTo:this.getEl().id,
-                                        type:'spline'
-                                    },
-                                    title:{
-                                        text:'StackOverflow Questions Over Time'
-                                    },
-                                    subtitle:{
-                                        text:''
-                                    },
-                                    xAxis:{
-                                        type:'datetime',
-                                        labels:{
-                                            formatter:function () {
-                                                var date = Ext.Date.parse(sorted[this.value], "c");
-                                                return Ext.Date.format(date, "F");
-                                            }
-                                        }
-                                    },
-                                    yAxis:{
-                                        title:{
-                                            text:'Question Count'
-                                        },
-                                        min:0
-                                    },
-                                    tooltip:{
-                                        formatter:function () {
-            
-                                            var date = Ext.Date.parse(sorted[this.x], "c");
-                                            var x = Ext.Date.format(date, "F");
-                                            return '<b>' + this.y + ' questions asked during </b><br/>' + x;
-                                        }
-                                    },
-            
-                                    series:[
-                                        {
-                                            name:'Months',
-                                            data:data
-                                        }
-                                    ]
-                                }
-                            }
-                        ],
-                        renderTo:Ext.getBody().dom
-                    });
-            
-                },
-            
-                launch:function () {
-                    var me = this;
-                    App.StackOverflowDataGrabber.getData(function (results) {
-                        me.results = results;
-                        me._displayData();
-                    });
-                }
-            });
+        Rally.onReady(function () {
+                Ext.define("App.StackOverflowDataGrabber",{getData:function(callback){function gatherer(success,response){pageNumber++,data=data.concat(response.items),response.has_more?App.StackOverflowDataGrabber._getOnePage(pageNumber,gatherer):callback(data)}var data=[],pageNumber=1;this._getOnePage(pageNumber,gatherer)},_getOnePage:function(pageNumber,callback){Ext.data.JsonP.request({url:"https://api.stackexchange.com/2.0/questions",params:{key:"U4DMV*8nvpm3EOpvf69Rxw((",tagged:"rally",site:"stackoverflow",pagesize:100,page:pageNumber,fromDate:Ext.Date.format(new Date("2011-07-01"),"U")},callback:callback})},singleton:!0});
+                Ext.define("CustomApp",{extend:"Rally.app.App",componentCls:"app",_bucketByDay:{},_bucketByMonth:{},_displayData:function(){Ext.each(this.results,function(question){var date=Ext.Date.format(Ext.Date.parse(question.creation_date,"U"),"c").split("T")[0];this._bucketByDay[date]?this._bucketByDay[date]++:this._bucketByDay[date]=1;var monthString=date.substring(0,7);this._bucketByMonth[monthString]?this._bucketByMonth[monthString]++:this._bucketByMonth[monthString]=1},this),this.createChart()},createChart:function(){var data=[],sorted=Ext.Object.getKeys(this._bucketByMonth).sort();sorted.pop(),Ext.each(sorted,function(key){data.push(this._bucketByMonth[key])},this),Ext.create("Ext.Container",{items:[{xtype:"rallychart",height:400,chartConfig:{chart:{renderTo:this.getEl().id,type:"spline"},title:{text:"StackOverflow Questions Over Time"},subtitle:{text:""},xAxis:{type:"datetime",labels:{formatter:function(){var date=Ext.Date.parse(sorted[this.value],"c");return Ext.Date.format(date,"F")}}},yAxis:{title:{text:"Question Count"},min:0},tooltip:{formatter:function(){var date=Ext.Date.parse(sorted[this.x],"c"),x=Ext.Date.format(date,"F");return"<b>"+this.y+" questions asked during </b><br/>"+x}},series:[{name:"Months",data:data}]}}],renderTo:Ext.getBody().dom})},launch:function(){var me=this;App.StackOverflowDataGrabber.getData(function(results){me.results=results,me._displayData()})}});
 
             Rally.launchApp('CustomApp', {
-                name: 'StackOverflow Question Reporting'
+                name:"StackOverflow Question Reporting",
+	            parentRepos:""
             });
+
         });
     </script>
 
+
     <style type="text/css">
         .app {
-             /* Add app styles here */
-        }
+     /* Add app styles here */
+}
+
     </style>
 </head>
 <body></body>
