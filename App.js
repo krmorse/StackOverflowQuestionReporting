@@ -55,7 +55,7 @@ Ext.define('CustomApp', {
                             text:'StackOverflow Questions Over Time'
                         },
                         subtitle:{
-                            text:''
+                            text: Ext.Array.sum(data) + ' total questions'
                         },
                         xAxis:{
                             type:'datetime',
